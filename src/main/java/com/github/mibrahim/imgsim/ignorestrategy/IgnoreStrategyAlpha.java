@@ -1,3 +1,5 @@
+package com.github.mibrahim.imgsim.ignorestrategy;
+
 import java.awt.image.BufferedImage;
 
 public class IgnoreStrategyAlpha implements IgnoreStrategy {

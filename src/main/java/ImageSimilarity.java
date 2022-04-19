@@ -1,3 +1,6 @@
+import com.github.mibrahim.imgsim.similaritymetric.SimilarityMetric;
+import com.github.mibrahim.imgsim.ignorestrategy.IgnoreStrategy;
+
 import java.awt.image.BufferedImage;
 import java.util.stream.IntStream;
 

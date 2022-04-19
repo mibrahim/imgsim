@@ -1,3 +1,5 @@
+package com.github.mibrahim.imgsim.similaritymetric;
+
 public class SimilarityMetricJaccard implements SimilarityMetric {
     double union = 0;
     private double intersection = 0;

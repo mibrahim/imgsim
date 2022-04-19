@@ -1,3 +1,5 @@
+package com.github.mibrahim.imgsim.ignorestrategy;
+
 import java.util.HashSet;
 import java.util.Set;
 

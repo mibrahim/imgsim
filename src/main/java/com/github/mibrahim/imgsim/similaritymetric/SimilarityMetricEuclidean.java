@@ -1,10 +1,15 @@
-public class SimilarityMetricEuclideanLAB implements SimilarityMetric {
+package com.github.mibrahim.imgsim.similaritymetric;
+
+public class SimilarityMetricEuclidean implements SimilarityMetric {
     private double sumOfSquaredError = 0;
     private int count = 0;
 
     @Override
     public void add(int rR, int rG, int rB, int tR, int tG, int tB) {
-        // TODO: Convert RGB to LAB, subtract, square and add to SumOfSquaredError
+        sumOfSquaredError +=
+                (rR - tR) * (rR - tR) +
+                        (rG - tG) * (rG - tG) +
+                        (rB - tB) * (rB - tB);
 
         count++;
     }
@@ -14,10 +19,10 @@ public class SimilarityMetricEuclideanLAB implements SimilarityMetric {
         if (!rhs.getClass().getName().equals(rhs.getClass().getName()))
             throw new RuntimeException("Different similarity metrics");
 
-        SimilarityMetricEuclideanLAB rhsLAB = (SimilarityMetricEuclideanLAB) rhs;
+        SimilarityMetricEuclidean rhsEuclid = (SimilarityMetricEuclidean) rhs;
 
-        this.sumOfSquaredError += rhsLAB.sumOfSquaredError;
-        this.count += rhsLAB.count;
+        this.sumOfSquaredError += rhsEuclid.sumOfSquaredError;
+        this.count += rhsEuclid.count;
     }
 
     @Override
@@ -29,4 +34,5 @@ public class SimilarityMetricEuclideanLAB implements SimilarityMetric {
     public SimilarityMetric createInstance() {
         return new SimilarityMetricEuclideanLAB();
     }
+
 }
