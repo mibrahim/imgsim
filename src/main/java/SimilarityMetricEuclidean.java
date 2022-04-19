@@ -1,10 +1,13 @@
-public class SimilarityMetricSTDDeviationLAB implements SimilarityMetric {
+public class SimilarityMetricEuclidean implements SimilarityMetric {
     private double sumOfSquaredError = 0;
     private int count = 0;
 
     @Override
     public void add(int rR, int rG, int rB, int tR, int tG, int tB) {
-        // TODO: Convert RGB to LAB, subtract and add to SumOfSquaredError
+        sumOfSquaredError +=
+                (rR - tR) * (rR - tR) +
+                        (rG - tG) * (rG - tG) +
+                        (rB - tB) * (rB - tB);
 
         count++;
     }
@@ -14,10 +17,10 @@ public class SimilarityMetricSTDDeviationLAB implements SimilarityMetric {
         if (!rhs.getClass().getName().equals(rhs.getClass().getName()))
             throw new RuntimeException("Different similarity metrics");
 
-        SimilarityMetricSTDDeviationLAB rhsLAB = (SimilarityMetricSTDDeviationLAB) rhs;
+        SimilarityMetricEuclidean rhsEuclid = (SimilarityMetricEuclidean) rhs;
 
-        this.sumOfSquaredError += rhsLAB.sumOfSquaredError;
-        this.count += rhsLAB.count;
+        this.sumOfSquaredError += rhsEuclid.sumOfSquaredError;
+        this.count += rhsEuclid.count;
     }
 
     @Override
@@ -27,6 +30,7 @@ public class SimilarityMetricSTDDeviationLAB implements SimilarityMetric {
 
     @Override
     public SimilarityMetric createInstance() {
-        return new SimilarityMetricSTDDeviationLAB();
+        return new SimilarityMetricEuclideanLAB();
     }
+
 }
