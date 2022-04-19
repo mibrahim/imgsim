@@ -97,7 +97,7 @@ public class ImageSimilarity {
 
         Set<Set<Integer>> regions = new HashSet<>();
 
-        // Segment assuming a neighbor in the same cluster is within 8x8
+        // Segment assuming a neighbor in the same cluster is within 7x7
         int width = targetImage.getWidth();
         int height = targetImage.getHeight();
 
@@ -109,6 +109,41 @@ public class ImageSimilarity {
 
             Set<Integer> toInspect = ConcurrentHashMap.newKeySet();
             toInspect.add(pixel);
+
+            Set<Integer> newToInspect = ConcurrentHashMap.newKeySet();
+            while (!toInspect.isEmpty()) {
+                // Get a pixel out
+                int pixelToInspect = differentPixels.iterator().next();
+                int x = pixelToInspect % width;
+                int y = pixelToInspect / width;
+
+                // Test its 7x7 neighbors
+                IntStream.range(-3, 4).parallel().forEach(
+                        xd -> {
+                            int newX = x + xd;
+                            if (newX < 0 || newX >= width) return;
+
+                            IntStream.range(-3, 4).parallel().forEach(
+                                    yd -> {
+                                        int newY = y + yd;
+                                        if (newY < 0 || newY >= height) return;
+
+                                        int newIndex = newY * width + x;
+
+                                        if (differentPixels.contains(newIndex)) {
+                                            newToInspect.add(newIndex);
+                                            differentPixels.remove(newIndex);
+                                            newRegion.add(newIndex);
+                                        }
+                                    }
+                            );
+                        }
+                );
+
+                toInspect = newToInspect;
+            }
+
+            if (newRegion.size() > ignoreSize) regions.add(newRegion);
         }
 
         return regions;
