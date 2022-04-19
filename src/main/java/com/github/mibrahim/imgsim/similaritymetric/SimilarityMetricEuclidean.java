@@ -1,6 +1,6 @@
 package com.github.mibrahim.imgsim.similaritymetric;
 
-public class SimilarityMetricEuclidean implements SimilarityMetric {
+public class SimilarityMetricEuclidean extends SimilarityMetric {
     private double sumOfSquaredError = 0;
     private int count = 0;
 
@@ -27,12 +27,12 @@ public class SimilarityMetricEuclidean implements SimilarityMetric {
 
     @Override
     public double computeMetric() {
-        return Math.sqrt(sumOfSquaredError / count);
+        return Math.sqrt(sumOfSquaredError / (3 * count));
     }
 
     @Override
     public SimilarityMetric createInstance() {
-        return new SimilarityMetricEuclideanLAB();
+        return new SimilarityMetricEuclidean();
     }
 
 }

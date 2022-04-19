@@ -1,6 +1,6 @@
 package com.github.mibrahim.imgsim.similaritymetric;
 
-public class SimilarityMetricEuclideanLAB implements SimilarityMetric {
+public class SimilarityMetricEuclideanLAB extends SimilarityMetric {
     private double sumOfSquaredError = 0;
     private int count = 0;
 

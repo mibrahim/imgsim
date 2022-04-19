@@ -1,6 +1,6 @@
 package com.github.mibrahim.imgsim.similaritymetric;
 
-public class SimilarityMetricJaccard implements SimilarityMetric {
+public class SimilarityMetricJaccard extends SimilarityMetric {
     double union = 0;
     private double intersection = 0;
 
@@ -13,6 +13,21 @@ public class SimilarityMetricJaccard implements SimilarityMetric {
         intersection += Math.min(rR, tR);
         intersection += Math.min(rG, tG);
         intersection += Math.min(rB, tB);
+    }
+
+    @Override
+    public boolean different(int rR, int rG, int rB, int tR, int tG, int tB) {
+        double localUnion = Math.max(rR, tR);
+        localUnion += Math.max(rG, tG);
+        localUnion += Math.max(rB, tB);
+
+        double localIntersection = Math.min(rR, tR);
+        localIntersection += Math.min(rG, tG);
+        localIntersection += Math.min(rB, tB);
+
+        double index = localIntersection / localUnion;
+
+        return index < 0.8;
     }
 
     @Override
