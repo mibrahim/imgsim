@@ -148,4 +148,55 @@ public class ImageSimilarity {
 
         return regions;
     }
+
+    public int[] getBoundingBox(Set<Integer> region) {
+        int[] boundingBox = new int[]{Integer.MAX_VALUE, Integer.MAX_VALUE, -1, -1};
+        int width = referenceImage.getWidth();
+
+        for (int index : region) {
+            int x = index % width;
+            int y = index / width;
+
+            if (x < boundingBox[0]) boundingBox[0] = x;
+            if (y < boundingBox[1]) boundingBox[1] = y;
+            if (x > boundingBox[2]) boundingBox[2] = x;
+            if (y > boundingBox[3]) boundingBox[3] = y;
+        }
+
+        return boundingBox;
+    }
+
+    public BufferedImage highlightRegions(int R, int G, int B, Set<Set<Integer>> regions, BufferedImage targetImage) {
+        BufferedImage highlightedImage = new BufferedImage(
+                targetImage.getWidth(),
+                targetImage.getHeight(),
+                targetImage.getType()
+        );
+
+        highlightedImage.getGraphics().drawImage(
+                targetImage, 0, 0, null
+        );
+
+        for (Set<Integer> region : regions) {
+            int[] boundingBox = getBoundingBox(region);
+            for (int x = boundingBox[0]; x <= boundingBox[2]; x++) {
+                for (int y = boundingBox[1]; y <= boundingBox[3]; y++) {
+                    int argb = targetImage.getRGB(x, y);
+                    int tr = (argb >> 16) & 255;
+                    int tg = (argb >> 8) & 255;
+                    int tb = argb  & 255;
+
+                    int nr = (R + tr) / 2;
+                    int ng = (G + tg) / 2;
+                    int nb = (B + tb) / 2;
+
+                    argb = (argb & 0xFF000000) | (nr << 16) | (ng << 8) | nb;
+
+                    highlightedImage.setRGB(x, y, argb);
+                }
+            }
+        }
+
+        return highlightedImage;
+    }
 }
