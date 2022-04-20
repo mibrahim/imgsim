@@ -166,6 +166,25 @@ public class ImageSimilarity {
         return boundingBox;
     }
 
+    public void highlightRectangle(BufferedImage highlightedImage, int R, int G, int B, int[] boundingBox) {
+        for (int x = boundingBox[0]; x <= boundingBox[2]; x++) {
+            for (int y = boundingBox[1]; y <= boundingBox[3]; y++) {
+                int argb = highlightedImage.getRGB(x, y);
+                int tr = (argb >> 16) & 255;
+                int tg = (argb >> 8) & 255;
+                int tb = argb & 255;
+
+                int nr = (R + tr) / 2;
+                int ng = (G + tg) / 2;
+                int nb = (B + tb) / 2;
+
+                argb = (argb & 0xFF000000) | (nr << 16) | (ng << 8) | nb;
+
+                highlightedImage.setRGB(x, y, argb);
+            }
+        }
+    }
+
     public BufferedImage highlightRegions(int R, int G, int B, Set<Set<Integer>> regions, BufferedImage targetImage) {
         BufferedImage highlightedImage = new BufferedImage(
                 targetImage.getWidth(),
@@ -179,22 +198,7 @@ public class ImageSimilarity {
 
         for (Set<Integer> region : regions) {
             int[] boundingBox = getBoundingBox(region);
-            for (int x = boundingBox[0]; x <= boundingBox[2]; x++) {
-                for (int y = boundingBox[1]; y <= boundingBox[3]; y++) {
-                    int argb = targetImage.getRGB(x, y);
-                    int tr = (argb >> 16) & 255;
-                    int tg = (argb >> 8) & 255;
-                    int tb = argb  & 255;
-
-                    int nr = (R + tr) / 2;
-                    int ng = (G + tg) / 2;
-                    int nb = (B + tb) / 2;
-
-                    argb = (argb & 0xFF000000) | (nr << 16) | (ng << 8) | nb;
-
-                    highlightedImage.setRGB(x, y, argb);
-                }
-            }
+            highlightRectangle(highlightedImage, R, G, B, boundingBox);
         }
 
         return highlightedImage;
